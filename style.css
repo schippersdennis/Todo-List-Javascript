@@ -1,0 +1,211 @@
+@import url("https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Anton&display=swap");
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Anton", sans-serif;
+  color: rgb(68, 68, 67);
+  outline: none;
+  background: rgb(250, 188, 0);
+  background: linear-gradient(
+    90deg,
+    rgba(250, 188, 0, 1) 0%,
+    rgba(201, 100, 235, 1) 100%
+  );
+}
+i {
+  cursor: pointer;
+}
+.container {
+  margin: auto;
+  max-width: 1200px;
+}
+/* logo */
+.logo {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 50px;
+}
+h1,
+h2 {
+  font-family: "Amatic SC", cursive;
+}
+h1 {
+  font-size: 50px;
+  color: rgb(255, 255, 255);
+}
+h2 {
+  font-size: 30px;
+  margin-top: -10px;
+  color: rgb(253, 243, 193);
+  letter-spacing: 5px;
+}
+/* input new toDo*/
+.inputfield {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.inputfield input {
+  width: 75%;
+  font-size: 15px;
+  padding: 10px;
+  outline: none;
+  font-weight: 700;
+  color: rgb(107, 58, 109);
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 5px;
+}
+.fa-plus {
+  margin-left: 10px;
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.692);
+}
+::placeholder {
+  color: rgba(128, 128, 128, 0.322);
+}
+/* Main */
+#todo-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 30px;
+}
+li {
+  width: 85%;
+  margin: 2px;
+  list-style: none;
+}
+
+#todo-list .todo-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.todo-container input[type="text"] {
+  width: 100%;
+  padding: 5px;
+  font-size: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.425);
+  border-radius: 3px;
+}
+
+/* custom checkbox */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  background-color: rgba(226, 224, 224, 0.466);
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+}
+
+input[type="checkbox"]::after {
+  content: "\f00c";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  color: rgb(255, 255, 255);
+  /* color: rgb(89, 120, 150);    */
+  font-size: 15px;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  display: none;
+}
+input[type="checkbox"]:hover {
+  background-color: rgb(255, 255, 255);
+}
+
+input[type="checkbox"]:checked {
+  background-color: rgba(211, 211, 211, 0.397);
+}
+input[type="checkbox"]:checked::after {
+  display: block;
+}
+.fa-save,
+.fa-times,
+.fa-trash-alt,
+.fa-edit {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.692);
+  margin-left: 8px;
+}
+
+/* added by JS */
+.line-through {
+  text-decoration: line-through;
+  color: rgb(255, 255, 255);
+}
+.save-edit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display: none;
+}
+
+.fa-times,
+.fa-save {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+.remove {
+  display: none;
+}
+
+.transform {
+  color: rgb(255, 233, 123);
+  transform: rotate(360deg);
+  transition: 400ms;
+}
+
+@media (min-width: 800px) {
+  h1 {
+    font-size: 100px;
+  }
+  h2 {
+    font-size: 50px;
+    margin-top: -10px;
+    color: rgb(253, 243, 193);
+    letter-spacing: 20px;
+  }
+  .inputfield input {
+    margin-left: 15px;
+  }
+
+  .fa-plus {
+    margin-left: 45px;
+    font-size: 35px;
+    color: rgba(255, 255, 255, 0.692);
+  }
+
+  .todo-container input[type="text"] {
+    font-weight: 700;
+  }
+  .transform {
+    color: rgb(255, 233, 123);
+    transform: rotate(360deg);
+    transition: 400ms;
+  }
+}
