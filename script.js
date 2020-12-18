@@ -69,9 +69,9 @@ addButton.addEventListener('click', () => {
    const inputEnabled = Array.from(inputChecker)
    const TrueOrFalse = inputEnabled.some(item => item.disabled !== true)
  
-console.log(TrueOrFalse)
    if (AddTodoInput.value !== "" && !TrueOrFalse) {
       addButton.classList.add('transform');
+      
       setTimeout(() => {
          postToDoRecord(AddTodoInput.value);
          AddTodoInput.value = '';
