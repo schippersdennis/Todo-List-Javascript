@@ -67,14 +67,11 @@ AddTodoInput.addEventListener("keyup", (event) => {
 
 addButton.addEventListener('click', () => {
    const inputEnabled = Array.from(inputChecker)
-   const TrueOrFalse = inputEnabled.some(item => {
-      if (!item.disabled == true) {
-         return true
-      } else { return false }
-   });
-
+   const TrueOrFalse = inputEnabled.some(item => item.disabled !== true)
+ 
    if (AddTodoInput.value !== "" && !TrueOrFalse) {
       addButton.classList.add('transform');
+      
       setTimeout(() => {
          postToDoRecord(AddTodoInput.value);
          AddTodoInput.value = '';
@@ -82,7 +79,6 @@ addButton.addEventListener('click', () => {
       }, 400);
 
    } else {
-      AddTodoInput.value = ''
       alert('\r\nYou can`t add a new ToDo:\r\n\r\n  1. You have to make sure the input field is not empty \r\n \r\n2. While editing you can`t apply another, finish your editing first  ')
    };
 });
