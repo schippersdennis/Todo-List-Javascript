@@ -1,19 +1,19 @@
 const toDoList = document.querySelector(`#todo-list`);
 const addButton = document.querySelector(`.fa-plus`);
 const AddTodoInput = document.querySelector(`#inputfield`);
-const inputChecker = toDoList.getElementsByClassName("inputbar");
-let localeArray = [];
+const inputChecker = toDoList.getElementsByClassName('inputbar');
+let localArray = [];
 
-const apiGetTolocaleArray = async () => {
+const apiGetTolocalArray = async () => {
   const apiGetRequest = await noteGET();
-  apiGetRequest.reverse().map((node) => localeArray.unshift(node));
+  apiGetRequest.reverse().map((node) => localArray.unshift(node));
 
-  return toDoNodesToDom(localeArray);
+  return toDoNodesToDom(localArray);
 };
-apiGetTolocaleArray();
+apiGetTolocalArray();
 
 const toDoNodesToDom = () => {
-  const toDoNodes = localeArray.map((toDoNode) => {
+  const toDoNodes = localArray.map((toDoNode) => {
     const toDo = document.createElement(`li`);
     toDo.classList.add(`${toDoNode._id}`);
 
@@ -32,7 +32,7 @@ const toDoNodesToDom = () => {
 
     if (toDoNode.done) {
       inputField.add(`line-through`);
-      editbtn.classList.add("remove");
+      editbtn.classList.add('remove');
       checkBox.checked = true;
     }
     addEventListeners(toDo);
@@ -45,7 +45,7 @@ const toDoNodesToDom = () => {
   });
 };
 
-AddTodoInput.addEventListener("keyup", (event) => {
+AddTodoInput.addEventListener('keyup', (event) => {
   newToDo.description = event.target.value;
   if (event.keyCode === 13) {
     event.preventDefault();
@@ -54,21 +54,21 @@ AddTodoInput.addEventListener("keyup", (event) => {
   }
 });
 
-addButton.addEventListener("click", () => {
+addButton.addEventListener('click', () => {
   const inputEnabled = Array.from(inputChecker);
   const TrueOrFalse = inputEnabled.some((item) => item.disabled !== true);
 
-  if (AddTodoInput.value !== "" && !TrueOrFalse) {
-    addButton.classList.add("transform");
+  if (AddTodoInput.value !== '' && !TrueOrFalse) {
+    addButton.classList.add('transform');
 
     setTimeout(() => {
       postToDoRecord(AddTodoInput.value);
-      AddTodoInput.value = "";
-      addButton.classList.remove("transform");
+      AddTodoInput.value = '';
+      addButton.classList.remove('transform');
     }, 400);
   } else {
     alert(
-      "\r\nYou can`t add a new ToDo:\r\n\r\n  1. You have to make sure the input field is not empty \r\n \r\n2. While editing you can`t apply another, finish your editing first  "
+      '\r\nYou can`t add a new ToDo:\r\n\r\n  1. You have to make sure the input field is not empty \r\n \r\n2. While editing you can`t apply another, finish your editing first  '
     );
   }
 });
@@ -82,15 +82,15 @@ const addEventListeners = (toDo) => {
   const editBtn = toDo.children[0].children[4];
   const deleteBtn = toDo.children[0].children[5];
 
-  checkBtn.addEventListener("click", (event) => {
+  checkBtn.addEventListener('click', (event) => {
     if (event.target.checked) {
       RECORD_ID = event.target.classList[2];
       newToDo = { description: inputField.value, done: true };
 
-      inputField.classList.add("line-through");
-      editBtn.classList.add("remove");
-      cancelBtn.classList.remove("show");
-      saveBtn.classList.remove("show");
+      inputField.classList.add('line-through');
+      editBtn.classList.add('remove');
+      cancelBtn.classList.remove('show');
+      saveBtn.classList.remove('show');
       inputField.disabled = true;
 
       updateToDoRecord();
@@ -98,14 +98,14 @@ const addEventListeners = (toDo) => {
       RECORD_ID = event.target.classList[2];
       newToDo = { description: inputField.value, done: false };
 
-      inputField.classList.remove("line-through");
-      editBtn.classList.remove("remove");
+      inputField.classList.remove('line-through');
+      editBtn.classList.remove('remove');
 
       updateToDoRecord();
     }
   });
 
-  inputField.addEventListener("keyup", (event) => {
+  inputField.addEventListener('keyup', (event) => {
     newToDo.description = event.target.value;
     if (event.keyCode === 13) {
       event.preventDefault();
@@ -113,45 +113,45 @@ const addEventListeners = (toDo) => {
     }
   });
 
-  saveBtn.addEventListener("click", (event) => {
-    saveBtn.classList.add("transform");
+  saveBtn.addEventListener('click', (event) => {
+    saveBtn.classList.add('transform');
     RECORD_ID = event.target.classList[2];
     newToDo = { description: `${inputField.value}`, done: checkBtn.checked };
 
     setTimeout(() => {
-      editBtn.classList.remove("remove");
-      cancelBtn.classList.remove("show");
-      saveBtn.classList.remove("show");
+      editBtn.classList.remove('remove');
+      cancelBtn.classList.remove('show');
+      saveBtn.classList.remove('show');
       inputField.disabled = true;
-      saveBtn.classList.remove("transform");
+      saveBtn.classList.remove('transform');
     }, 400);
 
     updateToDoRecord(toDo);
   });
 
-  cancelBtn.addEventListener("click", () => {
-    cancelBtn.classList.add("transform");
+  cancelBtn.addEventListener('click', () => {
+    cancelBtn.classList.add('transform');
     inputField.value = oldValue;
 
     setTimeout(() => {
       inputField.disabled = true;
-      editBtn.classList.remove("remove");
-      cancelBtn.classList.remove("show");
-      saveBtn.classList.remove("show");
-      cancelBtn.classList.remove("transform");
+      editBtn.classList.remove('remove');
+      cancelBtn.classList.remove('show');
+      saveBtn.classList.remove('show');
+      cancelBtn.classList.remove('transform');
     }, 400);
   });
 
-  editBtn.addEventListener("click", () => {
-    editBtn.classList.add("remove");
-    cancelBtn.classList.add("show");
-    saveBtn.classList.add("show");
+  editBtn.addEventListener('click', () => {
+    editBtn.classList.add('remove');
+    cancelBtn.classList.add('show');
+    saveBtn.classList.add('show');
     inputField.disabled = false;
     oldValue = inputField.value;
   });
 
-  deleteBtn.addEventListener("click", (event) => {
-    deleteBtn.classList.add("transform");
+  deleteBtn.addEventListener('click', (event) => {
+    deleteBtn.classList.add('transform');
     const recordId = event.target.classList[2];
 
     deleteToDoRecord(recordId, toDo);
@@ -160,34 +160,34 @@ const addEventListeners = (toDo) => {
 
 const postToDoRecord = async () => {
   const postToDo = await notePOST();
-  localeArray.unshift(postToDo);
+  localArray.unshift(postToDo);
 
-  toDoList.innerHTML = "";
+  toDoList.innerHTML = '';
   toDoNodesToDom();
 };
 
 const updateToDoRecord = async () => {
   await noteEDIT();
 
-  localeArray.map((node) => {
+  localArray.map((node) => {
     if (node._id === RECORD_ID) {
       node.description = newToDo.description;
       node.done = newToDo.done;
     }
   });
-  newToDo = { description: "", done: false };
+  newToDo = { description: '', done: false };
 };
 
 const deleteToDoRecord = async (recordId, toDo) => {
   RECORD_ID = recordId;
   await noteDELETE();
 
-  const filterOut = localeArray.filter((toDo) => {
+  const filterOut = localArray.filter((toDo) => {
     if (toDo._id !== recordId) {
       return toDo;
     }
   });
 
   toDo.parentNode.removeChild(toDo);
-  localeArray = filterOut;
+  localArray = filterOut;
 };
