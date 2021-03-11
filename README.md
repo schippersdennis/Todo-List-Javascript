@@ -10,7 +10,7 @@
 ## Description
 
 For this assignment I created a todo list linked to a *RESTful-API.*
-Partly because of this, it is possible to do the usual requests such as: GET, POST, PUT, DELETE to maintain the tasks of the todo list
+Partly because of this, it is possible to do the usual requests such as: **GET, POST, PUT, DELETE** to maintain the tasks of the todo list
 
 ## Requirements:
 
