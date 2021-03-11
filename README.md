@@ -5,7 +5,7 @@
 
 #### **Assignment : Todo-List**
 
-#### **Result:** Take a look at this project :https://todo-list-ac2556.netlify.app/
+#### **Result:** Take a look at this project: https://todo-list-ac2556.netlify.app/
 
 ## Description
 
