@@ -10,12 +10,7 @@
 ## Description
 
 For this assignment I created a todo list linked to a RESTful-API. 
-This allows: 
-- GET 
-- POST 
-- PUT 
-- DELETE 
-requests to be made in order to maintain the tasks
+This allows: GET,  POST,  PUT,  DELETE requests to be made in order to maintain the tasks
 
 ## Requirements:
 
