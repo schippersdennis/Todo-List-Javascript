@@ -9,8 +9,8 @@
 
 ## Description
 
-For this assignment I created a todo list linked to a RESTful-API. 
-This allows: GET,  POST,  PUT,  DELETE requests to be made in order to maintain the tasks
+For this assignment I created a todo list linked to a *RESTful-API.*
+Partly because of this, it is possible to do the usual requests such as: GET, POST, PUT, DELETE to maintain the tasks of the todo list
 
 ## Requirements:
 
