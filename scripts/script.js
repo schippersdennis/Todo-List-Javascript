@@ -1,193 +1,173 @@
-const toDoList = document.querySelector(`#todo-list`);
-const addButton = document.querySelector(`.fa-plus`);
-const AddTodoInput = document.querySelector(`#inputfield`);
-const inputChecker = toDoList.getElementsByClassName('inputbar');
-let localArray = [];
+const toDoList = document.querySelector(`#todo-list`)
+const addButton = document.querySelector(`.fa-plus`)
+const AddTodoInput = document.querySelector(`#inputfield`)
+const inputChecker = toDoList.getElementsByClassName("inputbar")
+let localArray = []
 
+// First request from API to localArray.
+// This to avoid unnecessary data traffic with the API
 const apiGetTolocalArray = async () => {
-  const apiGetRequest = await noteGET();
-  apiGetRequest.reverse().map((node) => localArray.unshift(node));
+	const apiGetRequest = await noteGET()
+	apiGetRequest.reverse().map((node) => localArray.push(node))
+	return toDoNodesToDom(localArray)
+}
+apiGetTolocalArray()
 
-  return toDoNodesToDom(localArray);
-};
-apiGetTolocalArray();
-
+//Building DOM
 const toDoNodesToDom = () => {
-  const toDoNodes = localArray.map((toDoNode) => {
-    const toDo = document.createElement(`li`);
-    toDo.classList.add(`${toDoNode._id}`);
+	const toDoNodes = localArray.map((toDoNode) => {
+		const toDo = document.createElement(`li`)
+		toDo.classList.add(`todo_id_${toDoNode.id}`)
+		toDo.innerHTML = `<div class="todo-container">
+            <input type="checkbox">
+            <input class="inputbar" type="text" value="${toDoNode.description}" disabled>
+            <i class="far fa-save"></i>
+            <i class="fas fa-times"></i>
+            <i class="far fa-edit"></i>
+            <i  class="far fa-trash-alt" name="bin"></i>
+         </div>`
+		addEventListeners(toDo, toDoNode)
+		return toDo
+	})
+	toDoNodes.forEach((node) => {
+		toDoList.append(node)
+	})
+}
 
-    toDo.innerHTML = `<div id="class="${toDoNode._id}" class="todo-container">
-            <input class=" ${toDoNode.done} checkbox ${toDoNode._id} " type="checkbox">
-            <input class="inputbar" type="text" state="${toDoNode.done}" value="${toDoNode.description}" disabled>
-            <i class="far fa-save ${toDoNode._id}"></i>
-            <i class="fas fa-times ${toDoNode._id}"></i>
-            <i class="far fa-edit ${toDoNode._id}"></i>
-            <i  class="far fa-trash-alt ${toDoNode._id}"  name="bin"></i>
-         </div>`;
+AddTodoInput.addEventListener("keyup", (event) => {
+	if (event.keyCode === 13) {
+		event.preventDefault()
+		addButton.click()
+	}
+})
 
-    const inputField = toDo.children[0].children[1].classList;
-    const editbtn = toDo.children[0].children[4];
-    const checkBox = toDo.children[0].children[0];
+addButton.addEventListener("click", () => {
+	// This piece of code prevent to add a new todo while edit-mode(todo) is enabled)
+	const inputEnabled = Array.from(inputChecker)
+	const TrueOrFalse = inputEnabled.some((item) => item.disabled !== true)
+	//Inputfield for adding new todos to the list
+	if (AddTodoInput.value !== "" && !TrueOrFalse) {
+		addButton.classList.add("transform")
+		const newToDo = { description: AddTodoInput.value, done: false }
+		setTimeout(() => {
+			postToDoRecord(newToDo)
+			AddTodoInput.value = ""
+			addButton.classList.remove("transform")
+		}, 400)
+	} else {
+		alert(
+			"\r\nYou can`t add a new ToDo:\r\n\r\n  1. You have to make sure the input field is not empty \r\n \r\n2. While editing you can`t apply another, finish your editing first  "
+		)
+	}
+})
 
-    if (toDoNode.done) {
-      inputField.add(`line-through`);
-      editbtn.classList.add('remove');
-      checkBox.checked = true;
-    }
-    addEventListeners(toDo);
+const addEventListeners = (toDo, toDoNode) => {
+	const [
+		checkBtn,
+		inputField,
+		saveBtn,
+		cancelBtn,
+		editBtn,
+		deleteBtn,
+	] = toDo.children[0].children
 
-    return toDo;
-  });
+	// check currunt todo for done status
+	if (toDoNode.done) {
+		inputField.classList.add(`line-through`)
+		editBtn.classList.add("remove")
+		checkBtn.checked = true
+	}
+	checkBtn.addEventListener("click", (event) => {
+		// Marks a todo with a white line-through (status: done)
+		if (event.target.checked) {
+			const newToDo = { description: inputField.value, done: true }
 
-  toDoNodes.forEach((node) => {
-    toDoList.append(node);
-  });
-};
+			inputField.classList.add("line-through")
+			editBtn.classList.add("remove")
+			cancelBtn.classList.remove("show")
+			saveBtn.classList.remove("show")
+			inputField.disabled = true
 
-AddTodoInput.addEventListener('keyup', (event) => {
-  newToDo.description = event.target.value;
-  if (event.keyCode === 13) {
-    event.preventDefault();
+			updateToDoRecord(toDoNode.id, newToDo)
+		} else {
+			//Removes the line-through from the todo status : undone
+			const newToDo = { description: inputField.value, done: false }
+			inputField.classList.remove("line-through")
+			editBtn.classList.remove("remove")
+			updateToDoRecord(toDoNode.id, newToDo)
+		}
+	})
 
-    addButton.click();
-  }
-});
+	// Function for when you edit a new todo, and then want to confirm it by pressing enter
+	inputField.addEventListener("keyup", (event) => {
+		if (event.keyCode === 13) {
+			event.preventDefault()
+			saveBtn.click()
+		}
+	})
+	// save todo with new values after editing
+	saveBtn.addEventListener("click", () => {
+		saveBtn.classList.add("transform")
+		const newToDo = { description: `${inputField.value}`, done: checkBtn.checked }
 
-addButton.addEventListener('click', () => {
-  const inputEnabled = Array.from(inputChecker);
-  const TrueOrFalse = inputEnabled.some((item) => item.disabled !== true);
+		setTimeout(() => {
+			editBtn.classList.remove("remove")
+			cancelBtn.classList.remove("show")
+			saveBtn.classList.remove("show")
+			inputField.disabled = true
+			saveBtn.classList.remove("transform")
+		}, 400)
 
-  if (AddTodoInput.value !== '' && !TrueOrFalse) {
-    addButton.classList.add('transform');
+		updateToDoRecord(toDoNode.id, newToDo)
+	})
+	// cancel todo's editing mode
+	cancelBtn.addEventListener("click", () => {
+		cancelBtn.classList.add("transform")
+		setTimeout(() => {
+			inputField.disabled = true
+			editBtn.classList.remove("remove")
+			cancelBtn.classList.remove("show")
+			saveBtn.classList.remove("show")
+			cancelBtn.classList.remove("transform")
+		}, 400)
+	})
+	// enable todo's edit mode
+	editBtn.addEventListener("click", () => {
+		editBtn.classList.add("remove")
+		cancelBtn.classList.add("show")
+		saveBtn.classList.add("show")
+		inputField.disabled = false
+	})
 
-    setTimeout(() => {
-      postToDoRecord(AddTodoInput.value);
-      AddTodoInput.value = '';
-      addButton.classList.remove('transform');
-    }, 400);
-  } else {
-    alert(
-      '\r\nYou can`t add a new ToDo:\r\n\r\n  1. You have to make sure the input field is not empty \r\n \r\n2. While editing you can`t apply another, finish your editing first  '
-    );
-  }
-});
+	deleteBtn.addEventListener("click", () => {
+		deleteBtn.classList.add("transform")
 
-const addEventListeners = (toDo) => {
-  const checkBtn = toDo.children[0].children[0];
-  const inputField = toDo.children[0].children[1];
-  let oldValue = null;
-  const saveBtn = toDo.children[0].children[2];
-  const cancelBtn = toDo.children[0].children[3];
-  const editBtn = toDo.children[0].children[4];
-  const deleteBtn = toDo.children[0].children[5];
+		deleteToDoRecord(toDoNode.id, toDo)
+	})
+}
 
-  checkBtn.addEventListener('click', (event) => {
-    if (event.target.checked) {
-      RECORD_ID = event.target.classList[2];
-      newToDo = { description: inputField.value, done: true };
+// update todo's and handle requests
+const postToDoRecord = async (newToDo) => {
+	const postToDo = await notePOST(newToDo)
+	localArray.unshift(postToDo)
+	toDoList.innerHTML = ""
+	toDoNodesToDom(localArray)
+}
 
-      inputField.classList.add('line-through');
-      editBtn.classList.add('remove');
-      cancelBtn.classList.remove('show');
-      saveBtn.classList.remove('show');
-      inputField.disabled = true;
-
-      updateToDoRecord();
-    } else {
-      RECORD_ID = event.target.classList[2];
-      newToDo = { description: inputField.value, done: false };
-
-      inputField.classList.remove('line-through');
-      editBtn.classList.remove('remove');
-
-      updateToDoRecord();
-    }
-  });
-
-  inputField.addEventListener('keyup', (event) => {
-    newToDo.description = event.target.value;
-    if (event.keyCode === 13) {
-      event.preventDefault();
-      saveBtn.click();
-    }
-  });
-
-  saveBtn.addEventListener('click', (event) => {
-    saveBtn.classList.add('transform');
-    RECORD_ID = event.target.classList[2];
-    newToDo = { description: `${inputField.value}`, done: checkBtn.checked };
-
-    setTimeout(() => {
-      editBtn.classList.remove('remove');
-      cancelBtn.classList.remove('show');
-      saveBtn.classList.remove('show');
-      inputField.disabled = true;
-      saveBtn.classList.remove('transform');
-    }, 400);
-
-    updateToDoRecord(toDo);
-  });
-
-  cancelBtn.addEventListener('click', () => {
-    cancelBtn.classList.add('transform');
-    inputField.value = oldValue;
-
-    setTimeout(() => {
-      inputField.disabled = true;
-      editBtn.classList.remove('remove');
-      cancelBtn.classList.remove('show');
-      saveBtn.classList.remove('show');
-      cancelBtn.classList.remove('transform');
-    }, 400);
-  });
-
-  editBtn.addEventListener('click', () => {
-    editBtn.classList.add('remove');
-    cancelBtn.classList.add('show');
-    saveBtn.classList.add('show');
-    inputField.disabled = false;
-    oldValue = inputField.value;
-  });
-
-  deleteBtn.addEventListener('click', (event) => {
-    deleteBtn.classList.add('transform');
-    const recordId = event.target.classList[2];
-
-    deleteToDoRecord(recordId, toDo);
-  });
-};
-
-const postToDoRecord = async () => {
-  const postToDo = await notePOST();
-  localArray.unshift(postToDo);
-
-  toDoList.innerHTML = '';
-  toDoNodesToDom();
-};
-
-const updateToDoRecord = async () => {
-  await noteEDIT();
-
-  localArray.map((node) => {
-    if (node._id === RECORD_ID) {
-      node.description = newToDo.description;
-      node.done = newToDo.done;
-    }
-  });
-  newToDo = { description: '', done: false };
-};
-
-const deleteToDoRecord = async (recordId, toDo) => {
-  RECORD_ID = recordId;
-  await noteDELETE();
-
-  const filterOut = localArray.filter((toDo) => {
-    if (toDo._id !== recordId) {
-      return toDo;
-    }
-  });
-
-  toDo.parentNode.removeChild(toDo);
-  localArray = filterOut;
-};
+const updateToDoRecord = async (id, todo) => {
+	await noteEDIT(id, todo)
+	localArray.map((node) => {
+		if (node.id === id) {
+			node.description = todo.description
+			node.done = todo.done
+		}
+	})
+}
+const deleteToDoRecord = async (id, todo) => {
+	await noteDELETE(id)
+	const filterOut = localArray.filter((toDo) => {
+		return toDo.id !== id
+	})
+	todo.parentNode.removeChild(todo)
+	localArray = filterOut
+}
